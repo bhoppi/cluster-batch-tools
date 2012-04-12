@@ -1,0 +1,35 @@
+#!/usr/bin/expect
+# scripted by Bhoppi Chaw
+# last modify: 2012-04-13
+
+set mod_desc "scp's wrapper for auto copy file without interact"
+
+if {$argc != 5} {
+    puts $mod_desc
+    puts "Usage: $argv0 <node addr> <user> <pass> <local file> <remote dest>"
+    exit -1
+}
+
+set node [lindex $argv 0]
+set user [lindex $argv 1]
+set passwd [lindex $argv 2]
+set file [lindex $argv 3]
+set dest [lindex $argv 4]
+set timeout 10
+
+spawn -noecho scp "$file" "$user@$node:$dest"
+expect {
+    "(yes/no)?" {
+        send "yes\r"
+        exp_continue
+    }
+    "password:" {
+        send "$passwd\r"
+    }
+    timeout {
+        exit 100
+    }
+}
+interact
+catch wait reason
+exit [lindex $reason 3]
