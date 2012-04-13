@@ -44,7 +44,6 @@ while getopts fhu:: opt; do
 done
 shift $((OPTIND-1))
 string=$1
-filename=`basename $string`
 
 echo -n "password of $user: "
 read -s passwd
@@ -57,13 +56,14 @@ for node in `cat $nodelistfile`; do
     if [ $filemode == false ]; then
         expect run-eachnode.exp $node $user $passwd "$string"
         if [ $? != 0 ]; then
-            showErr "execute command on $user@$node failed."
+            showErr "Execute command on $user@$node failed."
             exit 1
         fi
     else
+        filename=`basename $string`
         expect cp-eachnode.exp $node $user $passwd $string ""
         if [ $? != 0 ]; then
-            showErr "copy script to $user@$node failed."
+            showErr "Copy script to $user@$node failed."
             exit 2
         fi
         
@@ -73,7 +73,7 @@ for node in `cat $nodelistfile`; do
         expect run-eachnode.exp $node $user $passwd "rm -f ~/$filename"
         
         if [ $rv != 0 ]; then
-            showErr "execute script on $user@$node failed."
+            showErr "Execute script on $user@$node failed."
             exit 3
         fi
     fi
