@@ -2,7 +2,7 @@
 # scripted by Bhoppi Chaw
 # last modify: 2012-04-16
 
-set mod_desc "ssh's wrapper for auto exec cmd without interact"
+set mod_desc "ssh's wrapper for auto exec cmd without interact, background mode"
 
 if {$argc != 4} {
     puts $mod_desc
@@ -16,7 +16,7 @@ set passwd [lindex $argv 2]
 set rcmd [lindex $argv 3]
 set timeout 10
 
-spawn -noecho ssh "$user@$node" "$rcmd"
+spawn -noecho ssh "$user@$node"
 expect {
     "(yes/no)?" {
         send "yes\r"
@@ -29,6 +29,14 @@ expect {
         exit 100
     }
 }
+expect {
+    "$user" {
+        send "(($rcmd) &)\r"
+    }
+}
+expect {
+    "$user" {
+        send "exit\r"
+    }
+}
 interact
-catch wait reason
-exit [lindex $reason 3]
