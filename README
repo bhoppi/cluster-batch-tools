@@ -6,6 +6,7 @@ In order not to do this kind of task repeatedly, the cluster-batch-tools is a so
 
 This small project contains some scripts:
 
+    cl-cp.sh:          cp a specified local file to each node
     cl-exec.sh:        execute a specified command/script, auto on each node
     cp-eachnode.exp:   scp's wrapper for auto copy file without interact
     run-eachnode.exp:  ssh's wrapper for auto exec cmd without interact
