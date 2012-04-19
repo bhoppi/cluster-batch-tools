@@ -68,7 +68,7 @@ for node in `cat $nodelistfile`; do
     echo "Start to handle node $node..."
     
     if [ $filemode == false ]; then
-        if [ asyncmode == false ]; then
+        if [ $asyncmode == false ]; then
             expect run-eachnode.exp $node $user $passwd "$string"
         else
             expect run-eachnode-async.exp $node $user $passwd "$string"
@@ -86,7 +86,7 @@ for node in `cat $nodelistfile`; do
             exit 2
         fi
         
-        if [ asyncmode == false ]; then
+        if [ $asyncmode == false ]; then
             expect run-eachnode.exp $node $user $passwd "~/$filename"
             rv=$?
             
