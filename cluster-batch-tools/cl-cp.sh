@@ -1,5 +1,4 @@
 #!/bin/bash
-# scripted by Bhoppi Chaw
 
 mod_name=`basename $0`
 mod_desc="Distributed cp for all cluster's nodes."
