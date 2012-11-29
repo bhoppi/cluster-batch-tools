@@ -1,22 +1,23 @@
-In a cluster, on each node many programs, configurations and so on, are the same.
-
-On the other hand, lots of routine tasks on cluster need do same work on each node.
-
-In order not to do this kind of task repeatedly, the cluster-batch-tools is a solution, which let you just perform it once as if you do on a single computer, but affect the whole cluster.
+In a cluster, programs and configurations are often the same with each other on every node.
+On the other hand, lots of routine tasks on cluster need do same operations on each node.
+So Cluster-Batch-Tools is a solution, which let you just perform it once as if you do on a single computer, but affect the whole cluster.
 
 This small project contains some scripts:
-
     cl-cp.sh:                 cp a specified local file to each node
     cl-exec.sh:               execute a specified command/script, auto on each node
+    (to be added)
+    
+There are also some expect scripts used by above scripts. Usually you need not use them directly.
     cp-eachnode.exp:          scp's wrapper for auto copy file without interact
     run-eachnode.exp:         ssh's wrapper for auto exec cmd without interact
     run-eachnode-async.exp:   ssh's wrapper for auto exec cmd without interact, background mode
-    nodelist:                 file contains every node address of a cluster
+    
+And there also has a nodelist file, you can edit it as need.
 
-It has below dependencies to work: openssh, expect, bash or alike
+It has below dependencies to work: openssh, expect, bash(or other compatible shell)
 
 Hope it can help you :)
 
 Bhoppi Chaw
 
-2012-04-16
+2012-11-29

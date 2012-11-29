@@ -1,6 +1,4 @@
 #!/usr/bin/expect
-# scripted by Bhoppi Chaw
-# last modify: 2012-04-16
 
 set mod_desc "ssh's wrapper for auto exec cmd without interact, background mode"
 
@@ -18,25 +16,30 @@ set timeout 10
 
 spawn -noecho ssh "$user@$node"
 expect {
-    "(yes/no)?" {
+    "continue connecting (yes/no)?" {
+        expect -re $
         send "yes\r"
         exp_continue
     }
-    "password:" {
+    "Enter passphrase for key" {
+        expect -re $
         send "$passwd\r"
+        exp_continue
     }
-    timeout {
-        exit 100
+    "'s password:" {
+        expect -re $
+        send "$passwd\r"
+        expect {
+            "Permission denied" {exit 101}
+            "$user" {
+                send "($rcmd &)\r"
+                expect "$user" {send "exit\r"}
+            }
+        }
     }
-}
-expect {
     "$user" {
-        send "(($rcmd) &)\r"
+        send "($rcmd &)\r"
+        expect "$user" {send "exit\r"}
     }
+    timeout {exit 100}
 }
-expect {
-    "$user" {
-        send "exit\r"
-    }
-}
-interact

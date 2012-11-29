@@ -1,6 +1,5 @@
 #!/bin/bash
 # scripted by Bhoppi Chaw
-# last modify: 2012-04-16
 
 mod_name=`basename $0`
 mod_desc="Distributed cp for all cluster's nodes."
@@ -27,6 +26,9 @@ function showHelp()
     echo "<dest path>:"
     echo " The destination path on each node you want cp to."
     echo
+    echo "Example:"
+    echo " cl-cp.sh -u root -l nodelist /etc/fstab /etc"
+    echo
 }
 
 function showErr()
@@ -34,12 +36,16 @@ function showErr()
     echo "Error: $1" > /dev/stderr
 }
 
+if [ $# -lt 2 ]; then
+    showHelp > /dev/stderr
+    exit -1
+fi
 while getopts hl:p::u:: opt; do
     case $opt in
     h)
         echo $mod_desc
         showHelp
-        exit 0;;
+        exit;;
     l)
         nodelistfile="$OPTARG";;
     p)
@@ -57,20 +63,19 @@ filepath=$1
 destpath=$2
 
 if [ $argpass == false ]; then
-    echo -n "password of $user: "
+    echo -n "Password/KeyPassphrase of $user: "
     read -s passwd
     echo
 fi
 
 for node in `cat $nodelistfile`; do
-    echo
-    echo "Start to cp to node $node..."
+    echo "======== Enter node $node ========"
     
-    expect cp-eachnode.exp $node $user $passwd $filepath $destpath
+    expect cp-eachnode.exp "$node" "$user" "$passwd" "$filepath" "$destpath"
     if [ $? != 0 ]; then
-        showErr "Copy file to $user@$node failed."
+        showErr "Copy file to '$user@$node' failed."
         exit 1
     fi
     
-    echo "Bye, node $node."
+    echo "======== Leave node $node ========"
 done

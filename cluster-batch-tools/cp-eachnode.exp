@@ -1,6 +1,4 @@
 #!/usr/bin/expect
-# scripted by Bhoppi Chaw
-# last modify: 2012-04-13
 
 set mod_desc "scp's wrapper for auto copy file without interact"
 
@@ -19,17 +17,22 @@ set timeout 10
 
 spawn -noecho scp "$file" "$user@$node:$dest"
 expect {
-    "(yes/no)?" {
+    "continue connecting (yes/no)?" {
+        expect -re $
         send "yes\r"
         exp_continue
     }
-    "password:" {
+    "Enter passphrase for key" {
+        expect -re $
         send "$passwd\r"
+        exp_continue
     }
-    timeout {
-        exit 100
+    "'s password:" {
+        expect -re $
+        send "$passwd\r"
+        expect "Permission denied" {exit 101}
     }
+    timeout {exit 100}
 }
-interact
 catch wait reason
 exit [lindex $reason 3]
